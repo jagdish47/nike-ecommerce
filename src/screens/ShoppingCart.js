@@ -1,35 +1,45 @@
 import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
-import cart from "../data/cart";
 import CartListItem from "../components/cartListItem";
+import { useSelector } from "react-redux";
+import {
+  selectDeliveryPrice,
+  selectTotal,
+  selectTotalOfItems,
+} from "../store/cartSlice";
 
 const ShoppingCart = () => {
+  const cartItems = useSelector((state) => state.cart.items);
+
   const ShoppingCartTotals = () => {
-    <View style={styles.totalContainer}>
-      <View style={styles.row}>
-        <Text style={styles.text}>SubTotal</Text>
-        <Text style={styles.text}>410,000 US$</Text>
+    const SubTotal = useSelector(selectTotalOfItems);
+    const deliveryFee = useSelector(selectDeliveryPrice);
+    const total = useSelector(selectTotal);
+
+    return (
+      <View style={styles.totalContainer}>
+        <View style={styles.row}>
+          <Text style={styles.text}>SubTotal</Text>
+          <Text style={styles.text}>{SubTotal} US$</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.text}>Delivery</Text>
+          <Text style={styles.text}>{deliveryFee} US$</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.textBold}>Total</Text>
+          <Text style={styles.textBold}>{total} US$</Text>
+        </View>
       </View>
-      <View style={styles.row}>
-        <Text style={styles.text}>Delivery</Text>
-        <Text style={styles.text}>410,000 US$</Text>
-      </View>
-      <View style={styles.row}>
-        <Text style={styles.textBold}>Total</Text>
-        <Text style={styles.textBold}>410,000 US$</Text>
-      </View>
-    </View>;
+    );
   };
 
   return (
     <View>
       <FlatList
-        data={cart}
+        data={cartItems}
         renderItem={({ item }) => <CartListItem cartItem={item} />}
         ListFooterComponent={ShoppingCartTotals}
       />
-      <Pressable style={styles.button}>
-        <Text style={styles.buttonText}>Add To Cart</Text>
-      </Pressable>
     </View>
   );
 };
